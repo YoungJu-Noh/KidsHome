@@ -6,16 +6,18 @@
     ></v-row>
     <div>
       <v-row>
-        <v-col cols="12" md="5" align="center"
+        <v-col cols="12" md="5" align="left"
           ><p style="color: black">
-            <label for="week">요일을 선택하세요!!</label>
+            <label for="week">요일을 선택하세요 ===> </label>
             <strong>
-              <select v-model="select" style="color: orange">
-                <option v-bind:value="mon">{{ mon }}</option>
-                <option v-bind:value="tue">{{ tue }}</option>
-                <option v-bind:value="wed">{{ wed }}</option>
-                <option v-bind:value="thu">{{ thu }}</option>
-                <option v-bind:value="fri">{{ fri }}</option>
+              <select v-model="selected">
+                <option
+                  v-for="(item, index) in selectList"
+                  :key="index"
+                  :value="item.value"
+                >
+                  {{ item.name }}
+                </option>
               </select>
             </strong>
           </p>
@@ -23,7 +25,7 @@
       >
       <v-row>
         <v-text-field
-          label="Menu 입력"
+          label="🍱 Menu 입력"
           v-model="text"
           ref="refText"
         ></v-text-field>
@@ -80,14 +82,16 @@ export default {
       valid: false,
       text: "",
       menuList: [],
-      //
 
-      select: "-월요일-",
-      mon: "-월요일-",
-      tue: "-화요일-",
-      wed: "-수요일-",
-      thu: "-목요일-",
-      fri: "-금요일-",
+      selected: "",
+      selectList: [
+        { name: "Click", value: "" },
+        { name: "Mon", value: " -월요일- " },
+        { name: "Tue", value: " -화요일- " },
+        { name: "Wed", value: " -수요일- " },
+        { name: "Thu", value: " -목요일- " },
+        { name: "Fri", value: " -금요일- " },
+      ],
     };
   },
 
@@ -100,7 +104,7 @@ export default {
       }
 
       const menuList = [...this.menuList];
-      menuList.push({ text: this.select + this.text, edit: false });
+      menuList.push({ text: this.selected + this.text, edit: false });
       const response = await callPostCustom(KEY, {
         menuList,
       });

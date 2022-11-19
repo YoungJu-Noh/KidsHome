@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "@/store";
 
 const instance = axios.create({
-  baseURL: "https://api.devcury.kr/",
+  baseURL: process.env.VUE_APP_API_URL,
   // baseURL: "http://localhost:8090/",
   timeout: 20000,
 });
@@ -27,7 +27,7 @@ export const callApi = async (url, config) => {
     } else {
       if (error?.response?.data?.error) {
         alert(error?.response?.data?.error);
-        return error.response;
+        throw new Error(error);
       } else {
         throw new Error(error);
       }

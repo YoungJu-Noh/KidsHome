@@ -83,14 +83,11 @@ export default {
           ...this.user,
         });
 
-        //console.debug(response.status);
-
         if (response.status === 201) {
           alert("회원가입 완료");
           this.dialog = false;
         }
       } catch (error) {
-        //console.debug(error);
         console.error(error);
         alert("네트워크 장애");
       }
