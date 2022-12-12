@@ -10,13 +10,14 @@
           ><p style="color: black">
             <label for="week">요일을 선택하세요 ===> </label>
             <strong>
-              <select v-model="selected">
+              <select placeholder="Click" v-model="selected" ref="select">
+                <option value="">Click</option>
                 <option
-                  v-for="(item, index) in selectList"
-                  :key="index"
-                  :value="item.value"
+                  v-for="(item, key) in selectObjs"
+                  :key="key"
+                  :value="key"
                 >
-                  {{ item.name }}
+                  {{ item }}
                 </option>
               </select>
             </strong>
@@ -31,7 +32,7 @@
         ></v-text-field>
 
         <v-col cols="12" md="2">
-          <v-btn class="mr-4" @click="apply" rounded color="success">
+          <v-btn class="mr-4" @click="postMenu" rounded color="success">
             등록
           </v-btn>
         </v-col>
@@ -58,10 +59,15 @@
               @click="menu.edit = true"
               >edit</v-icon
             >
-            <v-icon v-show="menu.edit" class="icon" small @click="save(menu)">
+            <v-icon
+              v-show="menu.edit"
+              class="icon"
+              small
+              @click="updateMenu(menu)"
+            >
               done
             </v-icon>
-            <v-icon class="icon" small @click="deleteItem(index)"
+            <v-icon class="icon" small @click="deleteMenu(index)"
               >delete</v-icon
             >
           </li>
@@ -84,27 +90,36 @@ export default {
       menuList: [],
 
       selected: "",
-      selectList: [
-        { name: "Click", value: "" },
-        { name: "Mon", value: " -월요일- " },
-        { name: "Tue", value: " -화요일- " },
-        { name: "Wed", value: " -수요일- " },
-        { name: "Thu", value: " -목요일- " },
-        { name: "Fri", value: " -금요일- " },
-      ],
+
+      selectObjs: {
+        Mon: "-월요일-",
+        Tue: "-화요일-",
+        Wed: "-수요일-",
+        Thu: "-목요일-",
+        Fri: "-금요일-",
+      },
     };
   },
 
   methods: {
-    async apply() {
+    async postMenu() {
       if (!this.text) {
         this.$refs.refText.focus();
         alert("오늘의 메뉴를 입력해주세요");
         return;
       }
 
+      if (!this.selected) {
+        alert("날짜를 선택해주세요");
+        this.$refs.select.focus();
+        return;
+      }
+
       const menuList = [...this.menuList];
-      menuList.push({ text: this.selected + this.text, edit: false });
+      menuList.push({
+        text: this.selectObjs[this.selected] + this.text,
+        edit: false,
+      });
       const response = await callPostCustom(KEY, {
         menuList,
       });
@@ -117,7 +132,7 @@ export default {
       }
     },
 
-    async save(menu) {
+    async updateMenu(menu) {
       menu.edit = false;
       const response = await callPostCustom(KEY, {
         menuList: this.menuList,
@@ -128,7 +143,7 @@ export default {
       }
     },
 
-    async deleteItem(index) {
+    async deleteMenu(index) {
       const menuList = [...this.menuList];
       menuList.splice(index, 1);
 
