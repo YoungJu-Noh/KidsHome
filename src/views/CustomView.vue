@@ -4,6 +4,7 @@
       <v-col><img src="../image/diet.png" width="200" hdight="200" /> </v-col
       ><v-col><h1 color="green">WEEK MENU_LIST</h1></v-col><v-col></v-col
     ></v-row>
+
     <div>
       <v-row>
         <v-col cols="12" md="5" align="left"
